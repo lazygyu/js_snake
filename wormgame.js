@@ -37,9 +37,14 @@
 	function unbind(el, eventName, handler){
 		if( el.detachEvent ){
 			el.detachEvent("on" + eventName, handler);
-		}else if(el.removeEventListener){
+		}
+		if(el.removeEventListener){
 			el.removeEventListener(eventName, handler, false);
 		}
+	}
+	
+	function puts(spans, x, y, txt){
+		
 	}
 	
 	var oldContStyle = null;
@@ -99,7 +104,7 @@
 		var curKey = "r";
 		var gotApple = false;
 		var gameEnd = false;
-
+	
 		function up() {
 			curKey = "u"
 		}
@@ -205,7 +210,7 @@
 			board[curX][curY] = curKey;
 			setTimeout(update, Math.max(50, 300 - score * 5))
 		}
-		this.keyHandler = function (evt) {
+		var keyHandler = function (evt) {
 			var e = evt || window.event;
 			if (e.keyCode == 38) up();
 			else if (e.keyCode == 40) down();
@@ -213,27 +218,26 @@
 			else if (e.keyCode == 39) right();
 			else if (e.keyCode == 27) {
 				gameEnd = true;
-				return false;
 			}
 			if( e.preventDefault ) e.preventDefault();
 			e.returnValue = false;
 			return false;
 		};
-
+	
 		function endGame(hasWin) {
 			if (!hasWin) alert("You lose!\nScore : " + score);
 			else if (hasWin) alert("You win!!\nScore : " + score);
-			unbind(document, "keydown", this.keyHandler);
+			unbind(document, "keydown", keyHandler);
 			cont.innerHTML = null;
 			cont.setAttribute("style", oldContStyle);
 			return
 		}
-		bind(document, "keydown", this.keyHandler);
+		bind(document, "keydown", keyHandler);
 		setTimeout(update, 1)
 	}
 	
-	window.startWormGame = function (cont) {
+	window.startWormGame = function (cont, opt) {
 		oldContStyle = cont.getAttribute("style");
-		var game = new wormGame(cont);
+		var game = new wormGame(cont, opt);
 	}
-})();
+	})();
